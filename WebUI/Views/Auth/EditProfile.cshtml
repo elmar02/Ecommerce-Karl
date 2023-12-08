@@ -1,0 +1,28 @@
+﻿@{
+    Layout = "_AuthLayout";
+}
+
+@model EditProfileDTO
+
+<h3 class="card-title text-left mb-3">Edit Profile</h3>
+<form method="post" enctype="multipart/form-data">
+    <div class="text-danger" asp-validation-summary="All"></div>
+    <div class="d-flex gap-2">
+        <div class="form-group">
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" type="text" class="form-control p_input">
+        </div>
+        <div class="form-group">
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" type="text" class="form-control p_input">
+            <input asp-for="Id" type="hidden"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input name="Email" value="@Model.Email" disabled type="email" class="form-control p_input bg-dark">
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-block enter-btn">Edit Profile</button>
+    </div>
+</form>
