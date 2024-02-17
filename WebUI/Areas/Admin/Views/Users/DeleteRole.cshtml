@@ -1,0 +1,18 @@
+﻿@model UserRolesDTO
+
+<form method="post">
+    @if (ViewData["Error"] != null)
+    {
+        <span class="text-danger">@ViewData["Error"]</span>
+    }
+    <div class="form-group">
+        <input name="id" type="hidden" value="@Model.Id" />
+        <select class="form-select" name="roleName">
+            @foreach (var role in Model.OtherRoles)
+            {
+                <option value="@role">@role</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-danger">Delete Role</button>
+</form>

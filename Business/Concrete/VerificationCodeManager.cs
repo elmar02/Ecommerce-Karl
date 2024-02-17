@@ -35,7 +35,7 @@ namespace Business.Concrete
                     Code = code,
                 };
                 _verifcationCodeDAL.Add(verificationCode);
-                return new SuccessDataResult<string>(verificationCode.LinkId.ToString());
+                return new SuccessDataResult<string>(data: verificationCode.LinkId.ToString());
             }
             catch (Exception ex)
             {
@@ -87,7 +87,6 @@ namespace Business.Concrete
                 if (code != verificationCode.Code)
                 {
                     verificationCode.AttempCount++;
-                    verificationCode.UpdatedDate = DateTime.Now;
                     _verifcationCodeDAL.Update(verificationCode);
                     return new ErrorResult($"Invalid Code! ({3-verificationCode.AttempCount} attempts remained!)");
                 }

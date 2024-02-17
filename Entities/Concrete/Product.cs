@@ -11,14 +11,14 @@ namespace Entities.Concrete
     public class Product : BaseEntity, IEntity
     {
         public List<ProductLanguage> ProductLanguages { get; set; }
-        public string Description { get; set; }
+        public string SeoUrl { get; set; }
         public double Price { get; set; }
         public double DisCount { get; set; } = 0;
         public double Rating { get; set; } = 0;
-        public int Stock { get; set; } = 0;
+        List<Stock> Stocks { get; set; }
+        public string ThumbnailUrl { get; set; }
         public List<Picture> Pictures { get; set; }
-        public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public List<ProductCategory> ProductCategories { get; set; }
         public bool IsFeatured { get; set; }
         public bool IsInList { get; set; }
         public List<Specification> Specifications { get; set; }

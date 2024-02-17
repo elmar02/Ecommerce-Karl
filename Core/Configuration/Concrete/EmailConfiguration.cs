@@ -17,6 +17,7 @@ namespace Core.Configuration.Concrete
             _configuration = configuration;
         }
 
+        public string Name => _configuration["EmailSettings:Name"];
         public string Email => _configuration["EmailSettings:Email"];
         public string Password => _configuration["EmailSettings:Password"];
         public string SmtpServer => _configuration["EmailSettings:SmtpServer"];

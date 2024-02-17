@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Entities.Concrete;
+using Entities.DTOs.RoleDTOs;
+using Entities.DTOs.StockDTOs;
 using Entities.DTOs.UserDTOs;
 using Entities.DTOs.VerifyDTOs;
+using Microsoft.AspNetCore.Identity;
 namespace Business.AutoMapper
 {
     public class MappingProfile : Profile
@@ -15,8 +13,12 @@ namespace Business.AutoMapper
         {
             CreateMap<RegisterDTO, User>();
             CreateMap<User, EditProfileDTO>().ReverseMap();
+            CreateMap<User, AdminAuthDTO>();
 
             CreateMap<CheckVerifyDTO, VerificationCode>().ReverseMap();
+            CreateMap<IdentityRole, RoleListDTO>();
+
+            CreateMap<CreateStockDTO, Stock>();
         }
     }
 }

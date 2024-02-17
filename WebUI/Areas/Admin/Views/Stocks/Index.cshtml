@@ -1,0 +1,48 @@
+﻿@model List<AdminStockListDTO>
+
+@{
+    var count = 1;
+}
+
+<a href="/@AdminName.Admin/stocks/create" class="btn btn-warning">Create</a>
+
+<div class="table-responsive">
+    <table id="dataTable" class="table table-dark table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Product Name</th>
+                <th>Color</th>
+                <th>Size</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var stock in Model)
+            {
+                <tr>
+                    <td>@(count++)</td>
+                    <td>@stock.ProductName</td>
+                    <td>@stock.Color</td>
+                    <td>@stock.Size</td>
+                    <td>@stock.Stock</td>
+                    <td>
+                        <form method="post" action="/@AdminName.Admin/stocks/delete/@stock.Id">
+                            <button onclick="return confirm('Are you sure you want to delete @stock.ProductName stocks?')" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+        });
+    </script>
+}

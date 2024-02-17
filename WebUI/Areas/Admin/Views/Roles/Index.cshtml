@@ -1,0 +1,46 @@
+﻿@model List<RoleListDTO>
+@{
+    int i = 1;
+}
+@if (User.IsInRole("Super Admin") || User.IsInRole("Admin"))
+{
+    <a href="/@AdminName.Admin/roles/create" class="btn btn-warning">Create Role</a>
+}
+<div class="table-responsive">
+    <table class="table table-dark table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Role Name</th>
+                @if (User.IsInRole("Super Admin") || User.IsInRole("Admin"))
+                {
+                    <th>Delete</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var role in Model)
+            {
+                <tr>
+                    <td>@(i++)</td>
+                    <td>@role.Name</td>
+                    @if (User.IsInRole("Super Admin"))
+                    {
+                        <td>
+                            @if (!(role.Name == "Admin" || role.Name == "User" || role.Name == "Super Admin"))
+                            {
+                                <form method="post" action="/@AdminName.Admin/roles/delete/@role.Id">
+                                    <button onclick="return confirm('Are you sure you want to delete @role.Name?')" class="btn btn-danger">Delete</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-black-50">cannot be deleted</span>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

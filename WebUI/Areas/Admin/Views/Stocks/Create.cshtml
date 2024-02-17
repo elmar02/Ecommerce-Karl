@@ -1,0 +1,49 @@
+﻿@model CreateStockDTO
+
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    @if (ViewData["Error"] != null)
+    {
+        <span class="text-danger">@ViewData["Error"]</span>
+    }
+    <div class="form-group">
+        <label asp-for="Count"></label>
+        <input type="number" placeholder="Enter Count" value=0 min=0 asp-for="Count" class="form-control" />
+    </div>
+    @if (ViewData["Products"] != null)
+    {
+        <label asp-for="ProductId"></label>
+        <select asp-for="ProductId" class="form-control">
+            <option>Choose Product</option>
+            @foreach (var item in ViewData["Products"] as List<ProductNameList>)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    }
+    @if (ViewData["Colors"] != null)
+    {
+        <label asp-for="ColorCode"></label>
+        <select asp-for="ColorCode" class="form-control">
+            <option>Choose Color</option>
+            @foreach (var color in ViewData["Colors"] as string[])
+            {
+                var colorEnum = Enum.Parse(typeof(Colors), color);
+                <option value="@colorEnum" style="color: @colorEnum">@colorEnum</option>
+            }
+        </select>
+    }
+    @if (ViewData["Sizes"] != null)
+    {
+        <label asp-for="SizeCode"></label>
+        <select asp-for="SizeCode" class="form-control">
+            <option>Choose Size</option>
+            @foreach (var size in ViewData["Sizes"] as string[])
+            {
+                var sizeEnum = Enum.Parse(typeof(Sizes), size);
+                <option value="@sizeEnum">@sizeEnum</option>
+            }
+        </select>
+    }
+    <button type="submit" class="btn btn-warning">Create</button>
+</form>

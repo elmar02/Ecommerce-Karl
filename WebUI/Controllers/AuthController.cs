@@ -1,8 +1,8 @@
 ﻿using Business.Abstract;
-using Business.Concrete;
 using Core.Helper;
 using Entities.DTOs.UserDTOs;
 using Entities.DTOs.VerifyDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.Controllers
@@ -31,7 +31,7 @@ namespace WebUI.Controllers
             if (!result.Success)
             {
                 ViewData["Error"] = result.Message;
-                return View();
+                return View(loginDTO);
             }
             return Redirect("/");
         }
@@ -50,19 +50,20 @@ namespace WebUI.Controllers
             if (!result.Success)
             {
                 ViewData["Error"] = result.Message;
-                return View();
+                return View(registerDTO);
             }
             return Redirect($"/auth/verifyEmail?linkId={result.Data}");
         }
         #endregion
         #region Edit Profile
+        [Authorize]
         public async Task<IActionResult> EditProfile()
         {
             var result = await _userService.GetProfileAsync();
             if (!result.Success) return Redirect("/auth/login");
             return View(result.Data);
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> EditProfile(EditProfileDTO editProfileDTO)
         {
@@ -70,22 +71,41 @@ namespace WebUI.Controllers
             if (!result.Success)
             {
                 ViewData["Error"] = result.Message;
-                return View();
+                return View(editProfileDTO);
             }
             return Redirect("/");
         }
         #endregion
         #region Change Password
+        [Authorize]
         public IActionResult ChangePassword()
         {
             return View();
         }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDTO changePasswordDTO)
+        {
+            var result = await _userService.ChangePasswordAsync(changePasswordDTO);
+            if (!result.Success)
+            {
+                ViewData["Error"] = result.Message;
+                return View(changePasswordDTO);
+            }
+            ViewData["Success"] = result.Message;
+            return View();
+        }
         #endregion
         #region Logout
+        [Authorize]
         [HttpPost]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            return Redirect;
+            var result = await _userService.LogoutAsync();
+            if (!result.Success)
+                return Redirect("/error/500");
+            return Redirect("/");
         }
         #endregion
         #region VerifyEmail

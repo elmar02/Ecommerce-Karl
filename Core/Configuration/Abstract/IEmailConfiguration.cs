@@ -8,6 +8,7 @@ namespace Core.Configuration.Abstract
 {
     public interface IEmailConfiguration
     {
+        string Name { get; }
         string Email { get; }
         string Password { get; }
         string SmtpServer { get; }

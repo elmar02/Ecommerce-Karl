@@ -15,5 +15,14 @@ namespace Business.Abstract
         Task<IDataResult<EditProfileDTO>> GetProfileAsync();
         Task<IResult> EditProfileAsync(EditProfileDTO editProfileDTO);
         Task<IResult> VerifyEmailAsync(int id, int code);
+        Task<IResult> LogoutAsync();
+        Task<IResult> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO);
+        Task<IDataResult<List<string>>> GetUserRolesAsync(string id);
+        Task<IDataResult<List<UserListDTO>>> GetUserListAsync();
+        Task<IDataResult<AdminAuthDTO>> GetAdminAuthAsync();
+        Task<IDataResult<UserRolesDTO>> GetOtherRolesAsync(string id);
+        Task<IResult> AddRoleToUserAsync(string id,string roleName);
+        Task<IDataResult<UserRolesDTO>> GetRemoveRolesAsync(string id);
+        Task<IResult> RemoveRoleFromUserAsync(string id,string roleName);
     }
 }

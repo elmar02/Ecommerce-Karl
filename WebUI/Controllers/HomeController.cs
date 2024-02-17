@@ -1,5 +1,3 @@
-using Core.Configuration.Abstract;
-using Core.Helper.MailHelper;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebUI.Models;
@@ -9,17 +7,14 @@ namespace WebUI.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IEmailHelper _email;
-
-        public HomeController(ILogger<HomeController> logger, IEmailHelper email)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _email = email;
         }
 
         public IActionResult Index()
         {
-            return View();
+           return View();
         }
 
         public IActionResult Privacy()

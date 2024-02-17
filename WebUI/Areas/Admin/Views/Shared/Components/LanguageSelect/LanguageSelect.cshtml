@@ -1,0 +1,11 @@
+﻿@model LanguageDTO
+<form id="languageForm" method="post" action="/Language/ChangeLanguage" class="nav-link form-group">
+    <select name="langCode" class="form-select bg-black border-0 text-white-50" onchange="submitForm()">
+        <option value="default">Default</option>
+        @foreach (var item in Model.Languages)
+        {
+            <option selected=@(Model.CurrentLangCode==item.Value) value="@item.Value">@item.Key</option>
+        }
+    </select>
+    <input type="hidden" name="currentUrl" value="@Model.PreviousLink" />
+</form>

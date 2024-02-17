@@ -11,8 +11,9 @@ namespace Entities.Concrete
     public class Category : BaseEntity, IEntity
     {
         public List<CategoryLanguage> CategoryLanguages { get; set; }
-        public bool IsSubCategory { get; set; } = false;
-        public List<Category> SubCategories { get; set; }
+        public bool IsSubCategory { get; set; }
+        public string SeoUrl { get; set; }
+        public List<CategorySubCategory> CategorySubCategories { get; set; }
         public List<Product> Products { get; set; }
     }
 }

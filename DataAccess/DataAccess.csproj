@@ -20,4 +20,10 @@
     <ProjectReference Include="..\Entities\Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Business">
+      <HintPath>..\Business\obj\Debug\net8.0\Business.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

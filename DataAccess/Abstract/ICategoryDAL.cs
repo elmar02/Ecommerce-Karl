@@ -1,5 +1,6 @@
 ﻿using Core.DataAccess;
 using Entities.Concrete;
+using Entities.DTOs.CategoryDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,9 @@ namespace DataAccess.Abstract
 {
     public interface ICategoryDAL : IRepositoryBase<Category>
     {
+        List<AdminCategoryListDTO> GetAllAdmin(string langCode);
+        List<AdminSubCategoriesDTO>? GetAllSubCategories(string langCode);
+        bool DeleteCategoryById(int id);
+        Category? GetCategoryById(int id);
     }
 }

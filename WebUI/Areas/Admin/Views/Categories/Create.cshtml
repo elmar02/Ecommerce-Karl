@@ -1,0 +1,58 @@
+﻿@model CreateCategoryDTO
+@{
+    int i = 0, j = 0, k=0;
+}
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    @if (ViewData["Error"] != null)
+    {
+        <span class="text-danger">@ViewData["Error"]</span>
+    }
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        @foreach (var item in LanguageCodes.Codes.Keys)
+        {
+            <li class="nav-item" role="presentation">
+                <button class="nav-link @(i == 0? "active":"")" id="@item-tab" data-bs-toggle="tab" data-bs-target="#@item" type="button" role="tab" aria-controls="@item" aria-selected="true">@item</button>
+            </li>
+            i++;
+        }
+    </ul>
+    <div class="tab-content">
+        @foreach (var item in LanguageCodes.Codes)
+        {
+            <div class="tab-pane @(j == 0? "active":"")" id="@item.Key" role="tabpanel" aria-labelledby="@item.Key-tab" tabindex="0">
+                <div class="form-group">
+                    <label asp-for="CategoryNames">Category Name (@item.Key)</label>
+                    <input type="text" asp-for="CategoryNames" class="form-control"/>
+                </div>
+            </div>
+            j++;
+        }
+    </div>
+    <div class="form-group">
+        <label>Choose Default Language (it replace all empty inputs with default input value)</label>
+        <select class="form-select bg-dark text-white" asp-for="DefaultLanguage">
+            @foreach (var item in LanguageCodes.Codes.Keys)
+            {
+                <option value="@(k++)">@item</option>
+            }
+        </select>
+    </div>
+    @if (ViewData["SubCategories"] != null)
+    {
+        List<AdminSubCategoriesDTO> subs = ViewData["SubCategories"] as List<AdminSubCategoriesDTO>;
+        if(subs.Count != 0)
+        {
+            <div class="form-group">
+                <label>Add SubCategories</label>
+                <select multiple class="form-select bg-dark text-white" asp-for="SubCategoryIds">
+                    @foreach (var cat in subs)
+                    {
+                        <option value="@cat.Id">@cat.Name</option>
+                    }
+                </select>
+            </div>
+        }
+    }
+    <button type="submit" class="btn btn-warning">Create</button>
+</form>

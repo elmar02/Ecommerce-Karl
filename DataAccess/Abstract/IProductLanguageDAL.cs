@@ -10,5 +10,6 @@ namespace DataAccess.Abstract
 {
     public interface IProductLanguageDAL : IRepositoryBase<ProductLanguage>
     {
+        bool CheckAllLanguages(List<string> languages);
     }
 }

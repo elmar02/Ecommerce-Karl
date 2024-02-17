@@ -1,9 +1,9 @@
-using DataAccess.Concrete;
 using Business.DependencyResolver;
-using Microsoft.EntityFrameworkCore;
+using DataAccess.Concrete;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Identity;
-using System;
+using WebUI.Services.Cookie;
+using WebUI.Services.Language;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,21 +15,43 @@ builder.Services.AddDefaultIdentity<User>().AddRoles<IdentityRole>()
 
 builder.Services.RunSQL();
 
+//LanguageService
+builder.Services.AddScoped<ILanguageService, LanguageManager>();
+
+//CookieService
+builder.Services.AddScoped<ICookieService, CookieManager>();
+
+builder.Services.ConfigureApplicationCookie(option =>
+{
+    option.LoginPath = "/Auth/Login";
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Error/500");
+    app.UseStatusCodePagesWithRedirects("/Error/{0}");
     app.UseHsts();
 }
+
+app.Use(async (context, next) =>
+{
+    await next();
+    if (context.Response.StatusCode == 404 || context.Response.StatusCode == 500)
+    {
+        context.Request.Path = $"/error/{context.Response.StatusCode}";
+        await next();
+    }
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

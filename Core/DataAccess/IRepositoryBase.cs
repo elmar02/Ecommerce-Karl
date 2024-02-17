@@ -14,7 +14,7 @@ namespace Core.DataAccess
         void Update(TEntity entity);
         void Delete(TEntity entity);
         TEntity Get(Expression<Func<TEntity, bool>> expression);
-        IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> expression);
+        IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? expression = null);
         void AddRange(IEnumerable<TEntity> entities);
         void DeleteRange(IEnumerable<TEntity> entities);
         void UpdateRange(IEnumerable<TEntity> entities);

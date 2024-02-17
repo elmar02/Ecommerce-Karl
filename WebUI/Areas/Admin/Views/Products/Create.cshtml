@@ -1,0 +1,233 @@
+﻿@model CreateProductDTO
+
+@{
+    int i = 0, j = 0, k = 0;
+}
+
+<form method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    @if (ViewData["Error"] != null)
+    {
+        <span class="text-danger">@ViewData["Error"]</span>
+    }
+    @* Title and description *@
+    <div>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            @foreach (var item in LanguageCodes.Codes.Keys)
+            {
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link @(i == 0? "active":"")" id="@item-tab" data-bs-toggle="tab" data-bs-target="#@item" type="button" role="tab" aria-controls="@item" aria-selected="true">@item</button>
+                </li>
+                i++;
+            }
+        </ul>
+        <div class="tab-content">
+            @foreach (var item in LanguageCodes.Codes)
+            {
+                <div class="tab-pane @(j == 0? "active":"")" id="@item.Key" role="tabpanel" aria-labelledby="@item.Key-tab" tabindex="0">
+                    <div class="form-group">
+                        <label asp-for="Names">Product Name (@item.Key)</label>
+                        <input type="text" asp-for="Names" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Descriptions">Description</label>
+                        <div style="filter: invert(0.9)">
+                            <textarea asp-for="Descriptions" id="editor"></textarea>
+                        </div>
+                    </div>
+                </div>
+                j++;
+            }
+        </div>
+    </div>
+    @* Default Language *@
+    <div class="form-group">
+        <label>Choose Default Language (it replace all empty inputs with default input value)</label>
+        <select class="form-select bg-dark text-white" asp-for="DefaultLanguage">
+            @foreach (var item in LanguageCodes.Codes.Keys)
+            {
+                <option value="@(k++)">@item</option>
+            }
+        </select>
+    </div>
+    @* Photos *@
+    <div class="form-group">
+        <label asp-for="Thumbnail"></label>
+        <div class="mb-2 d-flex justify-content-center bg-dark" style="height: 300px;">
+            <img id="prev" src="https://via.placeholder.com/600x240?text=Image+Preview" alt="thumbnail" class="img-fluid" />
+        </div>
+        <input id="thumbnailInput" asp-for="Thumbnail" type="file" accept="image/*" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Photos">Photos (max 5)</label>
+        <div id="photos" class="d-flex gap-1 flex-wrap mb-2">
+            
+        </div>
+        <input id="photosInput" asp-for="Photos" multiple type="file" accept="image/*" class="form-control"/>
+    </div>
+    @* Specifications *@
+    <div class="gap-2 mb-3 border p-1">
+        <h1>Specifications</h1>
+        <div id="specContainer">
+            
+        </div>
+        <button type="button" class="btn btn-primary" id="addSpec">Add</button>
+    </div>
+    @* Price *@
+    <div class="d-flex gap-2 align-items-end">
+        <div class="col-2">
+            <label asp-for="Price"></label>
+            <input id="price" type="number" asp-for="Price" min="0" step="0.01" class="form-control" value="0.00" />
+        </div>
+        <span class="pb-2">-</span>
+        <div class="col-2">
+            <label asp-for="Discount"></label>
+            <input id="discount" type="number" asp-for="Discount" min="0" step="0.01" class="form-control" value="0.00" />
+        </div>
+        <span class="pb-2">=</span>
+        <span id="result" class="pb-2"></span>
+    </div>
+    @* SubCategories *@
+    @if (ViewData["SubCategories"] != null)
+    {
+        <div class="form-group">
+            <label>Add SubCategories</label>
+            <select multiple class="form-select bg-dark text-white" asp-for="SubCategoryIds">
+                @foreach (var cat in ViewData["SubCategories"] as List<AdminSubCategoriesDTO>)
+                {
+                    <option value="@cat.Id">@cat.Name</option>
+                }
+            </select>
+        </div>
+    }
+    <button type="submit" class="btn btn-warning">Create</button>
+    <div class="d-flex gap-3">
+        <div class="form-group">
+            <label asp-for="IsFeatured"></label>
+            <input type="checkbox" asp-for="IsFeatured" />
+        </div>
+        <div class="form-group">
+            <label asp-for="IsInList"></label>
+            <input type="checkbox" asp-for="IsInList" />
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor');
+    </script>
+    <script>
+        var specIndex = 0;
+
+        function addSpec() {
+            var specDiv = $('<div class="d-flex align-items-center gap-2 form-group p-1">' +
+                '<input name="Specifications[' + specIndex + '].Key" class="form-control" placeholder="Key" />' +
+                '<input name="Specifications[' + specIndex + '].Value" class="form-control" placeholder="Value" />' +
+                '<button type="button" class="btn btn-danger deleteSpec">X</button>' +
+                '</div>');
+
+            $('#specContainer').append(specDiv);
+            specIndex++;
+        }
+
+        $(document).on('click', '.deleteSpec', function () {
+            $(this).parent().remove();
+            $('#specContainer').find('.form-group').each(function (index) {
+                $(this).find('input:eq(0)').attr('name', 'Specifications[' + index + '].Key');
+                $(this).find('input:eq(1)').attr('name', 'Specifications[' + index + '].Value');
+            });
+            specIndex--;
+        });
+
+        $(document).ready(function () {
+            function checkEmptyKeys() {
+                var isEmpty = false;
+
+                $('#specContainer').find('.form-group').each(function () {
+                    var keyInput = $(this).find('input:eq(0)').val().trim();
+
+                    if (keyInput === '') {
+                        isEmpty = true;
+                        return false;
+                    }
+                });
+
+                return isEmpty;
+            }
+
+            $('form').submit(function (event) {
+                if (checkEmptyKeys()) {
+                    alert('Key inputs cannot be empty!');
+                    event.preventDefault();
+                }
+            });
+
+        });
+
+
+        $('#addSpec').on('click', function () {
+            addSpec();
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#thumbnailInput').change(function () {
+                const file = this.files[0];
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    $('#prev').attr('src', event.target.result);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#photosInput').on('change', function () {
+                $('#photos').empty(); 
+
+                if (this.files && this.files.length > 0) {
+                    var totalFiles = this.files.length;
+                    var maxFiles = 5; 
+
+                    if (totalFiles > maxFiles) {
+                        alert('Maximum 5 images allowed. Please select up to 5 images.');
+                        $('#photosInput').val(''); 
+                        return;
+                    }
+
+                    for (var i = 0; i < totalFiles; i++) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            var imagePreview = '<div class="col-2 d-flex justify-content-center bg-dark" style="height: 100px"><img src="' + e.target.result + '" alt="thumbnail" class="img-fluid" /></div>';
+                            $('#photos').append(imagePreview);
+                        };
+                        reader.readAsDataURL(this.files[i]);
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Function to calculate the difference and update the result
+            function updateDifference() {
+                var price = parseFloat($('#price').val()) || 0; // Get the value of Price input
+                var discount = parseFloat($('#discount').val()) || 0; // Get the value of Discount input
+                var difference = (price - discount).toFixed(2); // Calculate the difference and round to 2 decimal places
+                $('#result').text(difference); // Update the text of the last span with the difference
+            }
+
+            // Trigger the calculation on input change for Price and Discount fields
+            $('#price, #discount').on('input', function () {
+                updateDifference(); // Call the function to update the difference
+            });
+
+            updateDifference();
+        });
+    </script>
+}

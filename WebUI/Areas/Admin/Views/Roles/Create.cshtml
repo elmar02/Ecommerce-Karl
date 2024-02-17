@@ -1,0 +1,11 @@
+﻿<form method="post">
+    @if (ViewData["Error"] != null)
+    {
+        <span class="text-danger">@ViewData["Error"]</span>
+    }
+    <div class="form-group">
+        <label class="form-label">Role Name</label>
+        <input type="text" name="roleName" class="form-control"/>
+    </div>
+    <button type="submit" class="btn btn-warning">Create Role</button>
+</form>
